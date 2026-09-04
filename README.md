@@ -1,11 +1,14 @@
 # Cheque Writer
 
-Self-hosted web app for printing Philippine bank cheques onto blank pre-printed
-stock. Runs as two Docker containers on an office LAN.
+Self-hosted web app for printing bank cheques onto blank pre-printed stock.
+Originally built and tested against Philippine bank cheques (BDO, BPI,
+Metrobank, and others), but works with any bank, anywhere — you create your
+own template from a photo or scan of your bank's actual cheque, and position
+each field to match. Runs as two Docker containers on an office LAN.
 
-Text is drawn at exact millimetre coordinates into a PDF — the app never prints
-a picture of a cheque, and it never generates MICR (that is already on the
-stock).
+Text is drawn at exact millimetre coordinates into a PDF — the app never
+prints a picture of a cheque, and it never generates MICR (that's already
+pre-printed on your bank's stock).
 
 ---
 

@@ -1,0 +1,475 @@
+/* Visual layout editor: canvas, field boxes, rulers, inspector. */
+
+.editor__grid {
+  display: grid;
+  grid-template-columns: 264px minmax(0, 1fr) 300px;
+  gap: var(--sp-4);
+  align-items: start;
+}
+.editor__side { display: flex; flex-direction: column; gap: var(--sp-4); }
+
+.backlink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  font-size: var(--text-xs);
+  color: var(--text-subtle);
+  margin-bottom: var(--sp-2);
+}
+.backlink:hover { color: var(--accent-text); text-decoration: none; }
+
+/* ── Canvas ────────────────────────────────────────────────────────────────── */
+.editor__main { display: flex; flex-direction: column; overflow: hidden; }
+
+.editor__toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-3);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
+}
+.editor__toolbar .is-on { background: var(--accent-soft); color: var(--accent-text); }
+.zoomlabel { min-width: 46px; text-align: center; font-size: var(--text-xs); }
+
+.canvas-wrap { padding: var(--sp-4); background: var(--surface-sunk); }
+.canvas-scroll { overflow: auto; padding-bottom: var(--sp-2); }
+.canvas-row { display: flex; align-items: flex-start; }
+
+/* Rulers, in millimetres. */
+.ruler { position: relative; color: var(--text-subtle); font-size: 9px; }
+.ruler--top { height: 16px; }
+.ruler--top span {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  padding-top: 5px;
+  border-left: 1px solid var(--border-strong);
+  padding-left: 2px;
+}
+.ruler--left { width: 22px; flex-shrink: 0; }
+.ruler--left span {
+  position: absolute;
+  right: 3px;
+  transform: translateY(-50%);
+}
+
+.sheet {
+  position: relative;
+  flex-shrink: 0;
+  background: #ffffff;
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  /* The sheet is physical paper — it stays white in dark mode, because that is
+     what the ink will actually land on. */
+  color-scheme: light;
+}
+
+.sheet__reference {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  user-select: none;
+  pointer-events: none;
+}
+
+.sheet__grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(80, 100, 160, 0.16) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(80, 100, 160, 0.16) 1px, transparent 1px);
+}
+
+/* ── Field boxes ───────────────────────────────────────────────────────────── */
+.fbox {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  border: 1px dashed rgba(79, 70, 229, 0.75);
+  background: rgba(99, 102, 241, 0.09);
+  cursor: grab;
+  touch-action: none;
+  border-radius: 2px;
+}
+.fbox:hover { background: rgba(99, 102, 241, 0.16); }
+.fbox:active { cursor: grabbing; }
+.fbox.is-selected {
+  border-style: solid;
+  border-color: var(--brand-600);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.28);
+  background: rgba(99, 102, 241, 0.13);
+  z-index: 5;
+}
+.fbox:focus-visible { outline: 2px solid var(--brand-600); outline-offset: 1px; }
+
+.fbox__tag {
+  position: absolute;
+  bottom: 100%;
+  left: -1px;
+  margin-bottom: 2px;
+  padding: 0 4px;
+  border-radius: 3px 3px 0 0;
+  background: var(--brand-600);
+  color: #fff;
+  font-size: 9px;
+  line-height: 14px;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity var(--transition);
+  pointer-events: none;
+}
+.fbox:hover .fbox__tag,
+.fbox.is-selected .fbox__tag { opacity: 1; }
+
+/* Sample text, drawn at the true printed size. */
+.fbox__text {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 0 1px;
+  overflow: hidden;
+  color: #101828;
+  line-height: 1.15;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.fbox__crossing { width: 100%; height: 100%; pointer-events: none; }
+.fbox__crossing line { stroke: #101828; stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+
+.fbox__image {
+  display: grid;
+  place-items: center;
+  width: 100%; height: 100%;
+  font-size: 9px;
+  color: var(--brand-700);
+  pointer-events: none;
+}
+
+.fbox__handle {
+  position: absolute;
+  width: 9px; height: 9px;
+  background: #fff;
+  border: 1.5px solid var(--brand-600);
+  border-radius: 2px;
+  touch-action: none;
+}
+.fbox__handle--e  { right: -5px; top: 50%; margin-top: -4.5px; cursor: ew-resize; }
+.fbox__handle--s  { bottom: -5px; left: 50%; margin-left: -4.5px; cursor: ns-resize; }
+.fbox__handle--se { right: -5px; bottom: -5px; cursor: nwse-resize; }
+
+.canvas-hint { margin-top: var(--sp-3); font-size: var(--text-xs); }
+.canvas-hint kbd {
+  display: inline-block;
+  margin: 0 2px;
+  padding: 0 4px;
+  border: 1px solid var(--border-strong);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  background: var(--surface);
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+
+/* ── Field list ────────────────────────────────────────────────────────────── */
+.fieldlist { list-style: none; margin: 0; padding: 0; }
+.fieldlist__item {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  width: 100%;
+  padding: var(--sp-2) var(--sp-2) var(--sp-2) var(--sp-3);
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color var(--transition);
+}
+.fieldlist__item:hover { background: var(--surface-hover); }
+.fieldlist__item.is-active {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent-text);
+  font-weight: 600;
+}
+.fieldlist__item.is-off .fieldlist__name { opacity: 0.5; text-decoration: line-through; }
+.fieldlist__name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.fieldlist__toggle {
+  display: grid;
+  place-items: center;
+  color: var(--text-subtle);
+  border-radius: var(--radius-sm);
+}
+.fieldlist__item:not(.is-off) .fieldlist__toggle { color: var(--success-fg); }
+
+/* ── Inspector ─────────────────────────────────────────────────────────────── */
+.inspector { display: flex; flex-direction: column; }
+.inspector__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  padding: var(--sp-4) var(--sp-5);
+  border-bottom: 1px solid var(--border);
+}
+.inspector__head h3 { font-size: var(--text-md); }
+.inspector__head p { font-size: var(--text-xs); }
+
+.inspector__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+  padding: var(--sp-5);
+}
+.inspector__legend {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+  margin-bottom: var(--sp-3);
+}
+.inspector__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-10) var(--sp-5);
+  text-align: center;
+  color: var(--text-subtle);
+}
+
+.inspector .form-grid { gap: var(--sp-3); }
+
+/* ── Segmented control + checkbox ──────────────────────────────────────────── */
+.segmented {
+  display: inline-flex;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.segmented button {
+  display: grid;
+  place-items: center;
+  width: 40px; height: 34px;
+  border: 0;
+  border-right: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background-color var(--transition), color var(--transition);
+}
+.segmented button:last-child { border-right: 0; }
+.segmented button:hover { background: var(--surface-hover); }
+.segmented button.is-active { background: var(--accent); color: #fff; }
+
+.check {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+.check input { width: 15px; height: 15px; accent-color: var(--accent); cursor: pointer; }
+
+/* ── Reference panel ───────────────────────────────────────────────────────── */
+.refpanel { display: flex; flex-direction: column; gap: var(--sp-4); }
+.refpanel__block { display: flex; flex-direction: column; gap: var(--sp-2); }
+.refpanel__sig {
+  width: 100%;
+  max-height: 90px;
+  object-fit: contain;
+  padding: var(--sp-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: #fff;
+}
+
+.dpi {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-3);
+  border-radius: var(--radius);
+  font-size: var(--text-xs);
+  line-height: 1.4;
+}
+.dpi.is-good { background: var(--success-bg); color: var(--success-fg); }
+.dpi.is-low  { background: var(--warn-bg);    color: var(--warn-fg); }
+
+@media (max-width: 1240px) {
+  .editor__grid { grid-template-columns: 240px minmax(0, 1fr); }
+  .editor__side--right { grid-column: 1 / -1; }
+}
+@media (max-width: 860px) {
+  .editor__grid { grid-template-columns: 1fr; }
+}
+
+/* ── Segmented date: individual digit boxes ────────────────────────────────── */
+.fbox--segment {
+  border-style: solid;
+  border-color: rgba(180, 83, 9, 0.8);
+  background: rgba(245, 158, 11, 0.14);
+  justify-content: center;
+}
+.fbox--segment:hover { background: rgba(245, 158, 11, 0.24); }
+.fbox--segment.is-selected {
+  border-color: var(--amber-700);
+  background: rgba(245, 158, 11, 0.28);
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.35);
+}
+.fbox--segment .fbox__tag { background: var(--amber-700); }
+
+/* A wider left border marks where MM / DD / YYYY begin, so the row reads as
+   three clusters even though every box is positioned independently. */
+.fbox--segment.is-group-start { border-left-width: 2.5px; }
+
+.fbox__digit {
+  display: grid;
+  place-items: center;
+  width: 100%; height: 100%;
+  color: #101828;
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* Group tinting, cycled so it works for any number of groups. */
+.fbox--group0 { border-color: rgba(180, 83, 9, 0.85); }
+.fbox--group1 { border-color: rgba(4, 120, 87, 0.85);  background: rgba(16, 185, 129, 0.14); }
+.fbox--group2 { border-color: rgba(67, 56, 202, 0.85); background: rgba(99, 102, 241, 0.14); }
+.fbox--group1:hover { background: rgba(16, 185, 129, 0.24); }
+.fbox--group2:hover { background: rgba(99, 102, 241, 0.24); }
+
+/* ── Inspector: segmented-date extras ──────────────────────────────────────── */
+.segcount {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-2);
+  margin-top: var(--sp-3);
+  padding: var(--sp-2) var(--sp-3);
+  border-radius: var(--radius);
+  font-size: var(--text-xs);
+  line-height: 1.45;
+}
+.segcount.is-ok  { background: var(--success-bg); color: var(--success-fg); }
+.segcount.is-bad { background: var(--danger-bg);  color: var(--danger-fg); }
+
+.segpreview {
+  display: flex;
+  justify-content: center;
+  gap: 3px;
+  margin-top: var(--sp-4);
+  flex-wrap: wrap;
+}
+.segpreview__box {
+  display: grid;
+  place-items: center;
+  width: 22px; height: 28px;
+  border: 1px solid var(--border-strong);
+  border-radius: 3px;
+  background: var(--surface);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+.segpreview__box.is-selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--focus-ring);
+}
+.seg-group0 { border-bottom: 3px solid var(--amber-500); }
+.seg-group1 { border-bottom: 3px solid var(--green-500); }
+.seg-group2 { border-bottom: 3px solid var(--brand-500); }
+
+/* ── Crop & straighten ─────────────────────────────────────────────────────── */
+.cropstage {
+  display: grid;
+  place-items: center;
+  padding: var(--sp-4);
+  border-radius: var(--radius);
+  background: var(--surface-sunk);
+  /* Chequerboard, so a crop past the image edge is obvious. */
+  background-image:
+    linear-gradient(45deg, var(--border) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--border) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--border) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--border) 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+}
+
+.cropframe { position: relative; touch-action: none; user-select: none; }
+.cropcanvas { display: block; width: 100%; height: 100%; }
+
+.cropmask {
+  position: absolute;
+  inset: 0;
+  background: rgba(8, 10, 16, 0.55);
+  pointer-events: none;
+}
+
+.cropbox {
+  position: absolute;
+  border: 1.5px solid var(--brand-500);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+  cursor: move;
+  touch-action: none;
+}
+
+.crophandle {
+  position: absolute;
+  width: 14px; height: 14px;
+  background: #fff;
+  border: 2px solid var(--brand-600);
+  border-radius: 3px;
+  touch-action: none;
+}
+.crophandle--nw { left: -8px;  top: -8px;    cursor: nwse-resize; }
+.crophandle--ne { right: -8px; top: -8px;    cursor: nesw-resize; }
+.crophandle--sw { left: -8px;  bottom: -8px; cursor: nesw-resize; }
+.crophandle--se { right: -8px; bottom: -8px; cursor: nwse-resize; }
+
+.slider { width: 100%; accent-color: var(--accent); }
+
+/* Live validation readout under the crop. */
+.cropcheck {
+  padding: var(--sp-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-sunk);
+}
+.cropcheck.is-ok   { background: var(--success-bg); border-color: color-mix(in srgb, var(--success-fg) 25%, transparent); }
+.cropcheck.is-warn { background: var(--warn-bg);    border-color: color-mix(in srgb, var(--warn-fg) 25%, transparent); }
+.cropcheck.is-bad  { background: var(--danger-bg);  border-color: color-mix(in srgb, var(--danger-fg) 25%, transparent); }
+
+.cropcheck dl {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: var(--sp-3);
+  margin: 0 0 var(--sp-3);
+}
+.cropcheck dt {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  opacity: 0.75;
+  margin-bottom: 2px;
+}
+.cropcheck dd { margin: 0; font-weight: 600; }
+.cropcheck p {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-2);
+  font-size: var(--text-sm);
+  line-height: 1.45;
+}
+.cropcheck p .icon { flex-shrink: 0; margin-top: 1px; }

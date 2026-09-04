@@ -1,0 +1,10 @@
+# Never ship a host-built node_modules into the image: it would shadow the
+# install done inside the container, with binaries built for the wrong
+# platform (esbuild, in particular).
+**/node_modules
+**/dist
+.env
+data/
+uploads/
+*.log
+.git

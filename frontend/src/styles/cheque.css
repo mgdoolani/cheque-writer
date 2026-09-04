@@ -1,0 +1,219 @@
+/* New Cheque form, live preview panel and the print dialog. */
+
+.chequeform {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: var(--sp-5);
+  align-items: start;
+}
+
+.req {
+  font-size: var(--text-xs);
+  font-weight: 500;
+  color: var(--text-subtle);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ── Amount ────────────────────────────────────────────────────────────────── */
+.amount-input { position: relative; display: flex; align-items: center; }
+.amount-input__prefix {
+  position: absolute;
+  left: var(--sp-3);
+  color: var(--text-subtle);
+  font-weight: 600;
+  pointer-events: none;
+}
+.amount-input .input {
+  padding-left: 28px;
+  font-size: var(--text-lg);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* ── Payee combobox ────────────────────────────────────────────────────────── */
+.picker { position: relative; }
+.picker__list {
+  position: absolute;
+  z-index: 40;
+  top: calc(100% + 4px);
+  left: 0; right: 0;
+  max-height: 260px;
+  overflow-y: auto;
+  margin: 0;
+  padding: var(--sp-1);
+  list-style: none;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+}
+.picker__item {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  width: 100%;
+  padding: var(--sp-2) var(--sp-3);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.picker__item.is-active { background: var(--accent-soft); color: var(--accent-text); }
+.picker__name { font-weight: 500; }
+.picker__item .subtle { font-size: var(--text-xs); }
+
+/* ── Marking selector ──────────────────────────────────────────────────────── */
+.segmented--wide { display: flex; width: 100%; }
+.segmented--wide button {
+  flex: 1;
+  width: auto;
+  gap: var(--sp-2);
+  padding: 0 var(--sp-3);
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  grid-auto-flow: column;
+  place-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+/* ── Live preview panel ────────────────────────────────────────────────────── */
+.preview-card { position: sticky; top: 0; }
+
+.pv { display: flex; flex-direction: column; gap: 2px; }
+.pv__label {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+}
+.pv__value { font-size: var(--text-md); font-weight: 500; word-break: break-word; }
+.pv__words {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  line-height: 1.45;
+  font-style: italic;
+}
+.pv__words--boxed {
+  padding: var(--sp-3);
+  border-radius: var(--radius);
+  background: var(--surface-sunk);
+  font-style: normal;
+}
+
+.dupelist {
+  margin: var(--sp-2) 0;
+  padding-left: var(--sp-5);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Print dialog ──────────────────────────────────────────────────────────── */
+.printsummary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--sp-3) var(--sp-4);
+  margin: 0;
+  padding: var(--sp-4);
+  border-radius: var(--radius);
+  background: var(--surface-sunk);
+}
+.printsummary dt {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+  margin-bottom: 2px;
+}
+.printsummary dd { margin: 0; font-weight: 600; }
+
+.pdfframe {
+  width: 100%;
+  height: 340px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-sunk);
+}
+
+@media (max-width: 1000px) {
+  .chequeform { grid-template-columns: 1fr; }
+  .preview-card { position: static; }
+}
+@media (max-width: 620px) {
+  .segmented--wide { flex-direction: column; }
+  .segmented--wide button { border-right: 0; border-bottom: 1px solid var(--border-strong); }
+}
+
+/* ── Print Options panel ───────────────────────────────────────────────────── */
+.printopts {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  overflow: hidden;
+}
+
+.printopts__toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  width: 100%;
+  padding: var(--sp-3) var(--sp-4);
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color var(--transition);
+}
+.printopts__toggle:hover { background: var(--surface-hover); }
+.printopts__toggle > .icon:first-child { color: var(--accent-text); flex-shrink: 0; }
+.printopts__toggle > .icon:last-child { margin-left: auto; color: var(--text-subtle); }
+
+.printopts__title {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  font-weight: 600;
+  min-width: 0;
+}
+.printopts__title .subtle {
+  font-size: var(--text-xs);
+  font-weight: 400;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.printopts__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  padding: var(--sp-4);
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+}
+
+/* The persistent troubleshooting line. Always visible while the panel is open,
+   in both feed modes — it is the whole point of surfacing this here. */
+.printopts__help {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-2);
+  padding: var(--sp-3);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--surface-sunk);
+  font-size: var(--text-sm);
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+.printopts__help .icon { color: var(--accent-text); flex-shrink: 0; margin-top: 1px; }

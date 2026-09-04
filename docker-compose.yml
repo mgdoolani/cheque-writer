@@ -1,0 +1,58 @@
+# Cheque Writer — two containers, one command.
+#
+#   docker compose up -d --build      start (and rebuild after code changes)
+#   docker compose logs -f app        watch the app log
+#   docker compose down               stop
+#   docker compose down -v            stop AND erase the database
+#
+# There is nothing else to run. The app creates its own schema, seeds the bank
+# templates and creates the admin user on first boot.
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: phcheck-db
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+      # Deterministic collation so ORDER BY is stable across rebuilds.
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      # Exposed only so you can point pgAdmin/psql at it from the LAN.
+      # Delete this block entirely if you don't need outside DB access.
+      - "${DB_HOST_PORT:-5433}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
+  app:
+    build: .
+    container_name: phcheck-app
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+      DATABASE_URL: postgres://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}
+      JWT_SECRET: ${JWT_SECRET}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-ChangeMe123!}
+      UPLOAD_DIR: /data/uploads
+    volumes:
+      # Reference check images live here and survive rebuilds.
+      - uploads:/data/uploads
+    ports:
+      - "${WEB_PORT:-8080}:5000"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  db_data:
+  uploads:

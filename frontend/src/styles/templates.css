@@ -1,0 +1,117 @@
+/* Bank template cards and the to-scale layout thumbnail. */
+
+.templates {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+  gap: var(--sp-5);
+}
+
+.template {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.template:hover { border-color: var(--border-strong); box-shadow: var(--shadow); }
+.template.is-retired { opacity: 0.62; }
+
+.template__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  padding: var(--sp-5);
+}
+
+.template__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--sp-3);
+}
+.template__name {
+  font-size: var(--text-md);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.template__badges { display: flex; gap: var(--sp-2); flex-shrink: 0; }
+
+/* ── Facts grid ────────────────────────────────────────────────────────────── */
+.template__facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--sp-3) var(--sp-4);
+  margin: 0;
+  padding: var(--sp-4);
+  border-radius: var(--radius);
+  background: var(--surface-sunk);
+}
+.template__facts dt {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+  margin-bottom: 2px;
+}
+.template__facts dd { margin: 0; font-size: var(--text-sm); font-weight: 500; }
+.template__facts .ok {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--success-fg);
+}
+
+.template__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+}
+.template__actions .btn--icon { margin-left: auto; }
+.template__actions .btn--icon ~ .btn--icon { margin-left: 0; }
+
+/* ── Thumbnail ─────────────────────────────────────────────────────────────── */
+.thumb {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: var(--sp-5);
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
+  /* Graph paper, to read as a measuring surface. */
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+.thumb__svg { width: 100%; max-height: 150px; display: block; }
+.thumb__empty {
+  position: absolute;
+  font-size: var(--text-xs);
+  color: var(--text-subtle);
+  background: var(--surface);
+  padding: 2px var(--sp-2);
+  border-radius: var(--radius-sm);
+}
+
+/* ── Fieldset used by record dialogs ───────────────────────────────────────── */
+.fieldset {
+  margin: 0;
+  padding: var(--sp-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.fieldset legend {
+  padding: 0 var(--sp-2);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+}
+
+@media (max-width: 520px) {
+  .templates { grid-template-columns: 1fr; }
+  .template__facts { grid-template-columns: 1fr; }
+}

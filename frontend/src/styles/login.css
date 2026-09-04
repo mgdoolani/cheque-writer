@@ -1,0 +1,63 @@
+/* Sign-in screen and the session splash. Both sit outside the app shell. */
+
+.login {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-5);
+  min-height: 100%;
+  padding: var(--sp-6);
+  background: var(--bg);
+  /* A faint wash so the card reads as raised rather than floating on flat grey. */
+  background-image:
+    radial-gradient(60rem 30rem at 50% -10%, var(--accent-soft), transparent 70%);
+}
+
+.login__corner { position: absolute; top: var(--sp-4); right: var(--sp-4); }
+
+.login__card {
+  width: 100%;
+  max-width: 380px;
+  padding: var(--sp-8);
+  box-shadow: var(--shadow-lg);
+}
+
+.login__brand { text-align: center; margin-bottom: var(--sp-6); }
+.login__brand h1 { font-size: var(--text-xl); margin-bottom: var(--sp-1); }
+.login__brand p { font-size: var(--text-sm); }
+
+.login__mark {
+  display: inline-grid;
+  place-items: center;
+  width: 52px; height: 52px;
+  margin-bottom: var(--sp-4);
+  border-radius: var(--radius-lg);
+  background: var(--brand-600);
+  color: #fff;
+  box-shadow: var(--shadow);
+}
+
+.login__submit { width: 100%; height: 40px; margin-top: var(--sp-2); }
+
+.login__foot { font-size: var(--text-xs); }
+
+/* ── Session splash ────────────────────────────────────────────────────────── */
+.splash {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-4);
+  min-height: 100%;
+  color: var(--text-muted);
+}
+.splash__mark {
+  display: grid;
+  place-items: center;
+  width: 48px; height: 48px;
+  border-radius: var(--radius-lg);
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}

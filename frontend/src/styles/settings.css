@@ -1,0 +1,259 @@
+/* Settings screen: section cards, preview boxes, stacked segmented control. */
+
+.settings {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  gap: var(--sp-5);
+  align-items: start;
+}
+
+.preview-box {
+  padding: var(--sp-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-sunk);
+}
+.preview-box__text {
+  margin: var(--sp-2) 0 var(--sp-2);
+  font-size: var(--text-md);
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--text);
+  min-height: 1.5em;
+}
+.preview-box__amount {
+  max-width: 130px;
+  height: 30px;
+  padding: 2px var(--sp-2);
+  text-align: right;
+  font-size: var(--text-sm);
+}
+
+/* Two-line option inside a segmented control (US / UK). */
+.segmented__stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.2;
+  gap: 1px;
+}
+.segmented__hint { font-size: var(--text-xs); opacity: 0.75; font-weight: 400; }
+.segmented--wide button { height: auto; min-height: 38px; padding: var(--sp-2) var(--sp-3); }
+
+.settings .check { padding: var(--sp-1) 0; }
+.settings .check input:disabled { cursor: not-allowed; }
+
+/* ── Role picker (Users) ───────────────────────────────────────────────────── */
+.rolepick { display: flex; flex-direction: column; gap: var(--sp-2); }
+
+.rolepick__item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-3);
+  padding: var(--sp-3);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--transition), background-color var(--transition);
+}
+.rolepick__item:hover:not(:disabled) { background: var(--surface-hover); }
+.rolepick__item.is-active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+.rolepick__item.is-active .icon { color: var(--accent-text); }
+.rolepick__item > span { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.rolepick__item .muted { font-size: var(--text-xs); line-height: 1.4; }
+.rolepick__item .icon { color: var(--text-subtle); margin-top: 2px; flex-shrink: 0; }
+
+.badge--warn { background: var(--warn-bg); color: var(--warn-fg); }
+
+/* ── Printer setup wizard ──────────────────────────────────────────────────── */
+.wizard { display: flex; flex-direction: column; gap: var(--sp-5); }
+
+.wizard__steps {
+  display: flex;
+  gap: var(--sp-2);
+  list-style: none;
+  margin: 0;
+  padding: 0 0 var(--sp-4);
+  border-bottom: 1px solid var(--border);
+  font-size: var(--text-xs);
+  color: var(--text-subtle);
+  flex-wrap: wrap;
+}
+.wizard__steps li { display: flex; align-items: center; gap: var(--sp-2); }
+.wizard__steps li + li::before { content: '›'; margin-right: var(--sp-2); opacity: 0.5; }
+.wizard__steps li.is-current { color: var(--accent-text); font-weight: 600; }
+.wizard__steps li.is-done { color: var(--success-fg); }
+
+.wizard__dot {
+  display: grid;
+  place-items: center;
+  width: 20px; height: 20px;
+  border-radius: var(--radius-full);
+  background: var(--surface-sunk);
+  font-weight: 700;
+  font-size: 10px;
+}
+.is-current .wizard__dot { background: var(--accent); color: #fff; }
+.is-done .wizard__dot { background: var(--success-bg); color: var(--success-fg); }
+
+.wizard__question {
+  padding: var(--sp-4);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--accent-soft);
+  color: var(--text);
+  font-size: var(--text-md);
+  line-height: 1.5;
+}
+
+.wizard__verdict {
+  padding: var(--sp-4);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  display: flex; flex-direction: column; gap: var(--sp-3);
+}
+
+.modelpick { display: flex; flex-direction: column; gap: var(--sp-2); max-height: 330px; overflow-y: auto; }
+.modelpick__item {
+  display: flex; align-items: flex-start; gap: var(--sp-3);
+  padding: var(--sp-3);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text); font: inherit; text-align: left; cursor: pointer;
+  transition: border-color var(--transition), background-color var(--transition);
+}
+.modelpick__item:hover { background: var(--surface-hover); }
+.modelpick__item.is-active {
+  border-color: var(--accent); background: var(--accent-soft);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+.modelpick__item > span { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.modelpick__item .muted { font-size: var(--text-xs); line-height: 1.4; }
+.modelpick__item .icon { color: var(--text-subtle); margin-top: 2px; flex-shrink: 0; }
+.modelpick__item.is-active .icon { color: var(--accent-text); }
+
+.nudger {
+  display: flex; flex-direction: column; gap: var(--sp-2);
+  padding: var(--sp-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-sunk);
+}
+.nudger__pad { display: flex; flex-direction: column; align-items: center; gap: var(--sp-2); }
+.nudger__pad button {
+  display: grid; place-items: center;
+  width: 40px; height: 36px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text); cursor: pointer;
+}
+.nudger__pad button:hover { background: var(--accent-soft); border-color: var(--accent); }
+.nudger__value { min-width: 130px; text-align: center; font-weight: 600; }
+
+/* ── Wizard diagrams (illustrative only — never interactive) ───────────────── */
+.diagram { color: var(--text-muted); flex-shrink: 0; }
+
+.diagrow {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  padding: var(--sp-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-sunk);
+}
+.diagrow p { font-size: var(--text-sm); line-height: 1.5; }
+
+.orientrow {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+}
+.orientrow figure { margin: 0; text-align: center; }
+.orientrow figcaption { font-size: var(--text-xs); margin-top: 2px; }
+
+/* ── Feed-path picker: one primary option, the rest disclosed ──────────────── */
+.pathpick {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  width: 100%;
+  padding: var(--sp-3);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--transition), background-color var(--transition);
+}
+.pathpick:hover { background: var(--surface-hover); }
+.pathpick.is-active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+.pathpick.is-active .diagram { color: var(--accent-text); }
+.pathpick > span { display: flex; flex-direction: column; gap: 1px; flex: 1; min-width: 0; }
+.pathpick .muted { font-size: var(--text-xs); line-height: 1.4; }
+.pathpick > .icon { color: var(--accent); flex-shrink: 0; }
+
+.pathpick__advanced {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  margin-top: var(--sp-2);
+  padding-top: var(--sp-3);
+  border-top: 1px dashed var(--border-strong);
+}
+
+.linkish {
+  align-self: flex-start;
+  margin-top: var(--sp-2);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent-text);
+  font: inherit;
+  font-size: var(--text-sm);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.linkish:hover { color: var(--accent-hover); }
+
+/* ── Which print route will be used ────────────────────────────────────────── */
+.route {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: var(--text-sm);
+  line-height: 1.45;
+}
+.route--direct  { background: var(--success-bg); color: var(--success-fg); border-color: color-mix(in srgb, currentColor 25%, transparent); }
+.route--browser { background: var(--surface-sunk); color: var(--text-muted); }
+.route .icon { flex-shrink: 0; margin-top: 1px; }
+.route > span { flex: 1; }
+.route .btn--icon { margin: -6px -8px -6px 0; color: inherit; }
+
+.route--error {
+  background: var(--danger-bg);
+  color: var(--danger-fg);
+  border-color: color-mix(in srgb, currentColor 25%, transparent);
+}
+.template__facts dd .table__sub { display: block; margin-top: 1px; }

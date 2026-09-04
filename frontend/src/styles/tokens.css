@@ -1,0 +1,129 @@
+/*
+ * Design tokens. Every colour, radius and shadow in the app resolves to one of
+ * these — no literal hex values in component CSS.
+ *
+ * `data-theme` is written on <html> by the inline script in index.html and kept
+ * up to date by ThemeProvider, so "system" is resolved in JS and the CSS below
+ * only ever deals with two concrete themes.
+ */
+
+:root {
+  /* Brand — a deep indigo. Calm, legible on paper-white, not a default blue. */
+  --brand-50:  #eef2ff;
+  --brand-100: #e0e7ff;
+  --brand-200: #c7d2fe;
+  --brand-400: #818cf8;
+  --brand-500: #6366f1;
+  --brand-600: #4f46e5;
+  --brand-700: #4338ca;
+
+  /* Status */
+  --green-50:  #ecfdf5;  --green-500: #10b981;  --green-700: #047857;
+  --amber-50:  #fffbeb;  --amber-500: #f59e0b;  --amber-700: #b45309;
+  --red-50:    #fef2f2;  --red-500:   #ef4444;  --red-700:   #b91c1c;
+
+  /* Type scale */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+               'Helvetica Neue', Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+
+  --text-xs:   0.75rem;
+  --text-sm:   0.8125rem;
+  --text-base: 0.875rem;
+  --text-md:   1rem;
+  --text-lg:   1.125rem;
+  --text-xl:   1.375rem;
+  --text-2xl:  1.75rem;
+
+  /* Spacing — 4px base */
+  --sp-1: 0.25rem;  --sp-2: 0.5rem;   --sp-3: 0.75rem;  --sp-4: 1rem;
+  --sp-5: 1.25rem;  --sp-6: 1.5rem;   --sp-8: 2rem;     --sp-10: 2.5rem;
+  --sp-12: 3rem;
+
+  --radius-sm: 6px;
+  --radius:    9px;
+  --radius-lg: 14px;
+  --radius-full: 999px;
+
+  --sidebar-w: 244px;
+  --topbar-h: 60px;
+
+  --transition: 140ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Light ─────────────────────────────────────────────────────────────────── */
+:root,
+[data-theme='light'] {
+  --bg:            #f4f5f8;
+  --surface:       #ffffff;
+  --surface-2:     #fafbfc;
+  --surface-hover: #f1f3f7;
+  --surface-sunk:  #eef0f4;
+
+  --border:        #e3e6ec;
+  --border-strong: #cfd4de;
+
+  --text:          #14171f;
+  --text-muted:    #5b6472;
+  --text-subtle:   #838c9b;
+  --text-inverse:  #ffffff;
+
+  --accent:        var(--brand-600);
+  --accent-hover:  var(--brand-700);
+  --accent-soft:   var(--brand-50);
+  --accent-text:   var(--brand-700);
+  --focus-ring:    rgba(79, 70, 229, 0.35);
+
+  --success-bg: var(--green-50);  --success-fg: var(--green-700);
+  --warn-bg:    var(--amber-50);  --warn-fg:    var(--amber-700);
+  --danger-bg:  var(--red-50);    --danger-fg:  var(--red-700);
+
+  --sidebar-bg:     #101322;
+  --sidebar-text:   #a7aec1;
+  --sidebar-active:  #ffffff;
+  --sidebar-hover-bg: rgba(255, 255, 255, 0.06);
+  --sidebar-active-bg: rgba(99, 102, 241, 0.18);
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+
+  --shadow-sm: 0 1px 2px rgba(16, 19, 34, 0.05);
+  --shadow:    0 1px 3px rgba(16, 19, 34, 0.08), 0 4px 12px rgba(16, 19, 34, 0.05);
+  --shadow-lg: 0 8px 28px rgba(16, 19, 34, 0.12);
+}
+
+/* ── Dark ──────────────────────────────────────────────────────────────────── */
+[data-theme='dark'] {
+  --bg:            #0c0e14;
+  --surface:       #14171f;
+  --surface-2:     #191d27;
+  --surface-hover: #1e222d;
+  --surface-sunk:  #0f121a;
+
+  --border:        #262b36;
+  --border-strong: #363c4a;
+
+  --text:          #e8eaf0;
+  --text-muted:    #9aa3b4;
+  --text-subtle:   #6f7889;
+  --text-inverse:  #0c0e14;
+
+  --accent:        var(--brand-500);
+  --accent-hover:  var(--brand-400);
+  --accent-soft:   rgba(99, 102, 241, 0.14);
+  --accent-text:   var(--brand-400);
+  --focus-ring:    rgba(129, 140, 248, 0.4);
+
+  --success-bg: rgba(16, 185, 129, 0.13);  --success-fg: #34d399;
+  --warn-bg:    rgba(245, 158, 11, 0.13);  --warn-fg:    #fbbf24;
+  --danger-bg:  rgba(239, 68, 68, 0.13);   --danger-fg:  #f87171;
+
+  --sidebar-bg:     #0a0c12;
+  --sidebar-text:   #8d95a8;
+  --sidebar-active:  #ffffff;
+  --sidebar-hover-bg: rgba(255, 255, 255, 0.05);
+  --sidebar-active-bg: rgba(99, 102, 241, 0.2);
+  --sidebar-border: rgba(255, 255, 255, 0.06);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow:    0 1px 3px rgba(0, 0, 0, 0.5), 0 4px 12px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 8px 28px rgba(0, 0, 0, 0.55);
+}

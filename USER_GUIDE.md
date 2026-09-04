@@ -84,7 +84,7 @@ you like.
 ## Installation
 
 ```bash
-git clone <this-repo>
+git clone https://github.com/mgdoolani/cheque-writer.git
 cd cheque-writer
 ```
 

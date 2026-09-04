@@ -35,6 +35,17 @@ credentials. It shares nothing with any other project.
 
 ---
 
+## 📖 New here? Read the User Guide first
+
+**[→ USER_GUIDE.md](USER_GUIDE.md)** covers everything: installing QZ Tray,
+setting up a bank template, calibrating your printer, writing your first
+cheque, and troubleshooting common printing problems.
+
+This README is for running/deploying the app. The User Guide is for actually
+*using* it day to day.
+
+---
+
 ## First sign-in
 
 Log in with `ADMIN_USERNAME` / `ADMIN_PASSWORD` from `.env`.

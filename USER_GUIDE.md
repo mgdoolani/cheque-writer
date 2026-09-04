@@ -389,6 +389,4 @@ profile.
 MIT — see `LICENSE`. Use it, modify it, redistribute it, including
 commercially. Attribution appreciated but not required beyond keeping
 the license notice.
-
-If this saved you money or hassle, consider [buying me a coffee](#) —
 never required, always appreciated.

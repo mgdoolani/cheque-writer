@@ -12,6 +12,32 @@ pre-printed on your bank's stock).
 
 ---
 
+## ⚡ Quick Start (for the "try it first, read later" crowd)
+
+```bash
+git clone https://github.com/mgdoolani/cheque-writer.git
+cd cheque-writer
+# edit .env — set JWT_SECRET, ENCRYPTION_KEY, admin username/password
+docker compose up -d --build
+```
+
+Open `http://<your-server-ip>:8080`. That's the whole server side — nothing
+else to run on the server after this.
+
+---
+
+## 📖 New here? Start with these two guides
+
+| Guide | What it's for |
+|---|---|
+| **[→ ACTION_STEPS.md](ACTION_STEPS.md)** | A plain-language, numbered checklist for first-time setup — installing QZ Tray, calibrating your printer, setting up your first bank template. Start here. |
+| **[→ USER_GUIDE.md](USER_GUIDE.md)** | The fuller reference — everything in more depth, plus troubleshooting for when something doesn't line up. Come back to this if you get stuck. |
+
+This README covers running/deploying the app on the server. The two guides
+above cover actually *setting up and using* it.
+
+---
+
 ## Running it
 
 ```bash
@@ -38,17 +64,6 @@ credentials. It shares nothing with any other project.
 
 ---
 
-## 📖 New here? Read the User Guide first
-
-**[→ USER_GUIDE.md](USER_GUIDE.md)** covers everything: installing QZ Tray,
-setting up a bank template, calibrating your printer, writing your first
-cheque, and troubleshooting common printing problems.
-
-This README is for running/deploying the app. The User Guide is for actually
-*using* it day to day.
-
----
-
 ## First sign-in
 
 Log in with `ADMIN_USERNAME` / `ADMIN_PASSWORD` from `.env`.
@@ -66,7 +81,7 @@ top-right corner.
 
 ## Deployment checklist
 
-Work through this before the CT is reachable by anyone but you.
+Work through this before the server is reachable by anyone but you.
 
 - [ ] **Change every secret in `.env`.** `JWT_SECRET` and `ENCRYPTION_KEY` ship
       with generated values that are now in your git history. Regenerate both
@@ -151,3 +166,12 @@ frontend/src/
   pages/             one file per screen
   styles/            design tokens, then layer stylesheets
 ```
+
+---
+
+## License & Credit
+
+MIT — see `LICENSE`. Use it, modify it, redistribute it, including
+commercially.
+
+Created by [mgdoolani](https://github.com/mgdoolani).
